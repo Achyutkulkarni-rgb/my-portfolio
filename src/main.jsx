@@ -44,7 +44,7 @@ const GlobalStyles = () => (
 );
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
-const NAV_LINKS = ["About", "Projects", "Skills", "Experience", "Contact"];
+const NAV_LINKS = ["About", "Projects", "Skills", "Experience", "Education", "Contact"];
 
 const PROJECTS = [
   {
@@ -85,7 +85,7 @@ const SKILLS = [
   { name: "Python",        level: 80, icon: "🐍",  color: "#3572A5" },
   { name: "MongoDB",       level: 82, icon: "🍃",  color: "#47a248" },
   { name: "PostgreSQL",    level: 78, icon: "🐘",  color: "#336791" },
-  { name: "Java",      level: 72, icon: "△",   color: "#aaaaaa" },
+  { name: "Java",          level: 72, icon: "☕",  color: "#f89820" },
 ];
 
 const EXPERIENCE = [
@@ -100,9 +100,47 @@ const EXPERIENCE = [
     desc: "Learned and implemented full-stack development concepts including Java, JavaScript, React, and backend development while building multiple projects and strengthening problem-solving skills.",
   },
   {
-    role: "Backend Developer", company: "Amealia",
+    role: "Backend Developer", company: "Amealio",
     period: "2026 – Present", color: "#4cc9f0",
     desc: "Developing backend services and APIs using Node.js and Express. Working with databases, authentication systems, and improving server performance while supporting frontend integrations.",
+  },
+];
+
+const EDUCATION = [
+  {
+    degree: "B.Tech – Electronics and Communication Engineering",
+    institution: "Sharnbasva University, Kalaburagi",
+    period: "Dec 2021 – Jun 2025",
+    grade: "CGPA: 8.78 / 10",
+    color: "#00f5d4",
+    icon: "🎓",
+  },
+];
+
+const CERTIFICATIONS = [
+  {
+    title: "ISRO Internship",
+    issuer: "Indian Space Research Organisation",
+    year: "2025",
+    desc: "Worked on real-time system-level task validation and quality-focused development.",
+    color: "#00f5d4",
+    icon: "🛸",
+  },
+  {
+    title: "Intel Certified Project",
+    issuer: "Intel – Edge AI Analysis",
+    year: "2024",
+    desc: "Applied review parameters and consistency checks in AI workflows for vehicle movement analysis.",
+    color: "#f72585",
+    icon: "🤖",
+  },
+  {
+    title: "Core Java Certification",
+    issuer: "Internshala",
+    year: "2024",
+    desc: "Completed Core Java certification with a score of 87, covering OOP, data structures, and Java fundamentals.",
+    color: "#4cc9f0",
+    icon: "☕",
   },
 ];
 
@@ -112,7 +150,6 @@ const lerp = (a, b, t) => a + (b - a) * t;
 function LoadingScreen({ onDone }) {
   const [progress, setProgress] = useState(0);
   const [phase, setPhase] = useState(0);
-
   useEffect(() => {
     let v = 0;
     const id = setInterval(() => {
@@ -122,27 +159,16 @@ function LoadingScreen({ onDone }) {
     }, 40);
     return () => clearInterval(id);
   }, []);
-
   useEffect(() => {
     if (phase === 1) { setTimeout(() => { setPhase(2); setTimeout(onDone, 600); }, 400); }
   }, [phase, onDone]);
-
   return (
     <AnimatePresence>
       {phase < 2 && (
-        <motion.div key="loader"
-          initial={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.04 }}
+        <motion.div key="loader" initial={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.04 }}
           transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
-          style={{
-            position: "fixed", inset: 0, zIndex: 10000, background: "#020409",
-            display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-          }}
-        >
-          <motion.div
-            animate={phase === 1 ? { scale: [1, 18], opacity: [1, 0] } : {}}
-            transition={{ duration: 0.4 }}
-            style={{ textAlign: "center" }}
-          >
+          style={{ position: "fixed", inset: 0, zIndex: 10000, background: "#020409", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+          <motion.div animate={phase === 1 ? { scale: [1, 18], opacity: [1, 0] } : {}} transition={{ duration: 0.4 }} style={{ textAlign: "center" }}>
             <motion.p animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 2 }}
               style={{ fontSize: "11px", letterSpacing: "0.4em", color: "#00f5d4", marginBottom: "32px", textTransform: "uppercase" }}>
               Initializing Portfolio
@@ -151,8 +177,7 @@ function LoadingScreen({ onDone }) {
               {String(progress).padStart(3, "0")}<span style={{ color: "#00f5d4" }}>%</span>
             </div>
             <div style={{ width: "200px", height: "1px", background: "#111", margin: "24px auto 0", position: "relative", overflow: "hidden" }}>
-              <motion.div animate={{ width: `${progress}%` }}
-                style={{ height: "100%", background: "#00f5d4", position: "absolute", left: 0, top: 0 }} />
+              <motion.div animate={{ width: `${progress}%` }} style={{ height: "100%", background: "#00f5d4", position: "absolute", left: 0, top: 0 }} />
             </div>
           </motion.div>
         </motion.div>
@@ -167,7 +192,6 @@ function CustomCursor() {
   const pos = useRef({ x: 0, y: 0 }), rPos = useRef({ x: 0, y: 0 });
   const raf = useRef(null);
   const [show, setShow] = useState(false);
-
   useEffect(() => {
     if (window.innerWidth < 768) return;
     setShow(true);
@@ -186,7 +210,6 @@ function CustomCursor() {
     tick();
     return () => { cancelAnimationFrame(raf.current); window.removeEventListener("mousemove", mv); };
   }, []);
-
   if (!show) return null;
   return (
     <>
@@ -199,7 +222,6 @@ function CustomCursor() {
 // ─── PARTICLE FIELD ───────────────────────────────────────────────────────────
 function ParticleField() {
   const cvs = useRef(null), raf = useRef(null), pts = useRef([]), mou = useRef({ x: -9999, y: -9999 });
-
   useEffect(() => {
     const canvas = cvs.current, ctx = canvas.getContext("2d");
     let W, H;
@@ -235,7 +257,6 @@ function ParticleField() {
     draw();
     return () => { cancelAnimationFrame(raf.current); window.removeEventListener("resize",resize); window.removeEventListener("mousemove",mv); };
   }, []);
-
   return <canvas ref={cvs} style={{ position:"fixed",top:0,left:0,width:"100%",height:"100%",pointerEvents:"none",zIndex:0,opacity:0.7 }} />;
 }
 
@@ -274,21 +295,24 @@ function TypingText({ phrases }) {
 }
 
 // ─── MAGNETIC BUTTON ─────────────────────────────────────────────────────────
-function MagneticBtn({ children, onClick, primary }) {
+function MagneticBtn({ children, onClick, primary, href }) {
   const ref=useRef(null), [p,setP]=useState({x:0,y:0});
+  const Tag = href ? motion.a : motion.button;
   return (
-    <motion.button ref={ref}
+    <Tag ref={ref}
+      href={href} download={href ? true : undefined}
       onMouseMove={e=>{const r=ref.current.getBoundingClientRect();setP({x:(e.clientX-r.left-r.width/2)*0.3,y:(e.clientY-r.top-r.height/2)*0.3});}}
       onMouseLeave={()=>setP({x:0,y:0})}
       animate={{x:p.x,y:p.y}} transition={{type:"spring",stiffness:300,damping:20}}
       whileHover={{scale:1.05}} whileTap={{scale:0.97}} onClick={onClick}
       style={{
         padding:"14px 32px",borderRadius:"4px",fontSize:"13px",letterSpacing:"0.15em",
-        textTransform:"uppercase",fontWeight:700,cursor:"pointer",
+        textTransform:"uppercase",fontWeight:700,cursor:"pointer",textDecoration:"none",
+        display:"inline-flex",alignItems:"center",gap:"8px",
         ...(primary?{background:"linear-gradient(135deg,#00f5d4,#4cc9f0)",border:"none",color:"#020409",boxShadow:"0 0 30px rgba(0,245,212,0.35)"}
           :{background:"transparent",border:"1px solid rgba(255,255,255,0.25)",color:"#fff"}),
       }}
-    >{children}</motion.button>
+    >{children}</Tag>
   );
 }
 
@@ -376,11 +400,11 @@ function Hero() {
         <motion.h1 initial={{opacity:0,y:40}} animate={{opacity:1,y:0}} transition={{delay:0.7,duration:0.8,ease:[0.16,1,0.3,1]}}
           style={{fontSize:"clamp(48px,9vw,120px)",fontWeight:900,lineHeight:0.95,letterSpacing:"-0.04em",color:"#fff",marginBottom:"12px"}}>
           Achyut
-          <span style={{display:"block",WebkitTextStroke:"1px rgba(255,255,255,0.3)",WebkitTextFillColor:"transparent"}}>Kulkrani</span>
+          <span style={{display:"block",WebkitTextStroke:"1px rgba(255,255,255,0.3)",WebkitTextFillColor:"transparent"}}>Kulkarni</span>
         </motion.h1>
         <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{delay:1,duration:0.6}}
           style={{fontSize:"clamp(18px,3vw,28px)",color:"rgba(255,255,255,0.55)",marginBottom:"48px",minHeight:"1.4em"}}>
-          <TypingText phrases={["Full Stack Developer","React Specialist","UI/UX Craftsman","Open Source Contributor","Performance Obsessed"]}/>
+          <TypingText phrases={["Full Stack Developer","React Specialist","Node.js Engineer","Open Source Contributor","Performance Obsessed"]}/>
         </motion.div>
         <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:1.2,duration:0.6}}
           style={{display:"flex",gap:"16px",justifyContent:"center",flexWrap:"wrap"}}>
@@ -417,7 +441,7 @@ function About() {
     {num:"0-1",label:"Years Experience",color:"#00f5d4"},
     {num:"5+",label:"Projects Shipped",color:"#f72585"},
     {num:"2+",label:"Open Source Repos",color:"#4cc9f0"},
-    {num:"87",label:"Intershala Score Avg",color:"#7209b7"},
+    {num:"87",label:"Internshala Score",color:"#7209b7"},
   ];
   return (
     <section id="about" style={{padding:"120px 40px"}}>
@@ -426,8 +450,14 @@ function About() {
         <div className="two-col" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"80px",alignItems:"start"}}>
           <div>
             <SectionTitle>Crafting digital<br/>experiences that<br/><span style={{WebkitTextStroke:"1px rgba(255,255,255,0.3)",WebkitTextFillColor:"transparent"}}>matter.</span></SectionTitle>
-            <p style={{color:"rgba(255,255,255,0.55)",lineHeight:1.8,fontSize:"14px",marginBottom:"20px"}}>I'm a full-stack developer obsessed with the intersection of performance and aesthetics. I build products that are as technically solid as they are visually remarkable.</p>
-            <p style={{color:"rgba(255,255,255,0.35)",lineHeight:1.8,fontSize:"14px"}}>Based in San Francisco. Currently open to full-time roles and select freelance projects. Specializing in React ecosystems, Node.js backends, and anything that needs to be blazingly fast.</p>
+            <p style={{color:"rgba(255,255,255,0.55)",lineHeight:1.8,fontSize:"14px",marginBottom:"20px"}}>Results-driven Full Stack Developer with hands-on experience in designing, developing, and deploying scalable web applications. Proficient in building secure REST APIs and responsive front-end interfaces.</p>
+            <p style={{color:"rgba(255,255,255,0.35)",lineHeight:1.8,fontSize:"14px",marginBottom:"32px"}}>Based in Hyderabad. Currently working at Amealio. Open to new opportunities and freelance projects. Specializing in Node.js backends, React frontends, and everything in between.</p>
+            <MagneticBtn
+              href="/Achyut_CV.pdf"
+              primary
+            >
+              ⬇ Download Resume
+            </MagneticBtn>
           </div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"16px"}}>
             {stats.map((c,i)=>(
@@ -594,12 +624,128 @@ function Experience() {
   );
 }
 
+// ─── EDUCATION & CERTIFICATIONS ──────────────────────────────────────────────
+function Education() {
+  const ref = useRef(null), inView = useInView(ref, {once:true, margin:"-80px"});
+  return (
+    <section id="education" style={{padding:"120px 40px", background:"rgba(114,9,183,0.02)"}}>
+      <div ref={ref} style={{maxWidth:"1200px", margin:"0 auto"}}>
+        <SectionLabel>Education & Certifications</SectionLabel>
+        <SectionTitle>
+          Knowledge &<br/>
+          <span style={{WebkitTextStroke:"1px rgba(255,255,255,0.3)", WebkitTextFillColor:"transparent"}}>credentials.</span>
+        </SectionTitle>
+
+        {/* Education Card */}
+        <div style={{marginBottom:"64px"}}>
+          <p style={{fontSize:"11px",letterSpacing:"0.3em",color:"rgba(255,255,255,0.3)",textTransform:"uppercase",marginBottom:"24px"}}>— Education</p>
+          {EDUCATION.map((e, i) => (
+            <motion.div key={i}
+              initial={{opacity:0, y:30}}
+              animate={inView ? {opacity:1, y:0} : {}}
+              transition={{delay:0.1, duration:0.7, ease:[0.16,1,0.3,1]}}
+              whileHover={{y:-4, boxShadow:`0 20px 40px ${e.color}22`}}
+              style={{
+                padding:"36px 40px", borderRadius:"16px",
+                border:`1px solid ${e.color}33`,
+                background:`linear-gradient(135deg, ${e.color}08, transparent)`,
+                backdropFilter:"blur(10px)",
+                display:"flex", alignItems:"center", gap:"32px",
+                flexWrap:"wrap", transition:"box-shadow 0.3s",
+              }}
+            >
+              <div style={{fontSize:"48px"}}>{e.icon}</div>
+              <div style={{flex:1}}>
+                <h3 style={{fontSize:"20px", fontWeight:800, color:"#fff", marginBottom:"6px", letterSpacing:"-0.02em"}}>{e.degree}</h3>
+                <p style={{fontSize:"14px", color:e.color, marginBottom:"8px"}}>{e.institution}</p>
+                <div style={{display:"flex", gap:"16px", flexWrap:"wrap"}}>
+                  <span style={{fontSize:"12px", color:"rgba(255,255,255,0.35)", border:"1px solid rgba(255,255,255,0.1)", padding:"4px 12px", borderRadius:"3px"}}>{e.period}</span>
+                  <span style={{fontSize:"12px", color:e.color, background:e.color+"15", border:`1px solid ${e.color}33`, padding:"4px 12px", borderRadius:"3px", fontWeight:700}}>{e.grade}</span>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Certifications */}
+        <p style={{fontSize:"11px",letterSpacing:"0.3em",color:"rgba(255,255,255,0.3)",textTransform:"uppercase",marginBottom:"24px"}}>— Certifications & Awards</p>
+        <div style={{display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(min(100%, 340px), 1fr))", gap:"20px"}}>
+          {CERTIFICATIONS.map((c, i) => (
+            <motion.div key={i}
+              initial={{opacity:0, y:40}}
+              animate={inView ? {opacity:1, y:0} : {}}
+              transition={{delay:i*0.12 + 0.2, duration:0.7, ease:[0.16,1,0.3,1]}}
+              whileHover={{y:-6, boxShadow:`0 20px 40px ${c.color}22`}}
+              style={{
+                padding:"28px 32px", borderRadius:"14px",
+                border:`1px solid ${c.color}22`,
+                background:`linear-gradient(135deg, ${c.color}08, transparent)`,
+                backdropFilter:"blur(10px)", transition:"box-shadow 0.3s",
+              }}
+            >
+              <div style={{display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:"16px"}}>
+                <span style={{fontSize:"28px"}}>{c.icon}</span>
+                <span style={{fontSize:"11px", color:c.color, border:`1px solid ${c.color}33`, padding:"3px 10px", borderRadius:"3px", letterSpacing:"0.1em"}}>{c.year}</span>
+              </div>
+              <h3 style={{fontSize:"17px", fontWeight:800, color:"#fff", marginBottom:"4px"}}>{c.title}</h3>
+              <p style={{fontSize:"13px", color:c.color, marginBottom:"12px"}}>{c.issuer}</p>
+              <p style={{fontSize:"13px", color:"rgba(255,255,255,0.45)", lineHeight:1.7}}>{c.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Resume Download CTA */}
+        <motion.div
+          initial={{opacity:0, y:30}}
+          animate={inView ? {opacity:1, y:0} : {}}
+          transition={{delay:0.6, duration:0.7}}
+          style={{
+            marginTop:"64px", padding:"40px",
+            borderRadius:"16px",
+            border:"1px solid rgba(0,245,212,0.2)",
+            background:"linear-gradient(135deg, rgba(0,245,212,0.05), transparent)",
+            display:"flex", alignItems:"center", justifyContent:"space-between",
+            flexWrap:"wrap", gap:"24px",
+          }}
+        >
+          <div>
+            <h3 style={{fontSize:"22px", fontWeight:800, marginBottom:"8px"}}>Want the full picture?</h3>
+            <p style={{fontSize:"14px", color:"rgba(255,255,255,0.45)", lineHeight:1.7}}>Download my resume to see my complete experience, skills, and achievements.</p>
+          </div>
+          <motion.a
+  href="https://drive.google.com/uc?export=download&id=1KPVDOXQJcuniakmd1mhdCI7rTVZFIpfa"
+  target="_blank"
+  rel="noreferrer"
+  whileHover={{scale:1.05, boxShadow:"0 0 30px rgba(0,245,212,0.4)"}}
+  whileTap={{scale:0.97}}
+  style={{
+    padding:"16px 36px", borderRadius:"4px",
+    background:"linear-gradient(135deg,#00f5d4,#4cc9f0)",
+    color:"#020409", fontWeight:900, fontSize:"13px",
+    letterSpacing:"0.15em", textTransform:"uppercase",
+    textDecoration:"none", whiteSpace:"nowrap",
+    display:"flex", alignItems:"center", gap:"8px",
+  }}
+>
+  ⬇ Download Resume
+</motion.a>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 // ─── CONTACT ─────────────────────────────────────────────────────────────────
 function Contact() {
   const ref=useRef(null), inView=useInView(ref,{once:true,margin:"-80px"});
   const [form,setForm]=useState({name:"",email:"",message:""}), [sent,setSent]=useState(false), [focused,setFocused]=useState(null);
   const iStyle=(f)=>({width:"100%",padding:"16px 20px",background:focused===f?"rgba(0,245,212,0.05)":"rgba(255,255,255,0.03)",border:`1px solid ${focused===f?"rgba(0,245,212,0.4)":"rgba(255,255,255,0.08)"}`,borderRadius:"8px",color:"#fff",fontSize:"14px",outline:"none",transition:"all 0.2s",boxSizing:"border-box",resize:f==="message"?"vertical":"none"});
-  const socials=[{name:"GitHub",icon:"⌥",url:"https://github.com/achyut03/"},{name:"LinkedIn",icon:"in",url:"https://www.linkedin.com/in/achyut03/"},{name:"instagram",icon:"I",url:""},{name:"Dribbble",icon:"⬡",url:"#"}];
+  const socials=[
+    {name:"GitHub",  icon:"⌥", url:"https://github.com/achyut03/"},
+    {name:"LinkedIn",icon:"in", url:"https://www.linkedin.com/in/achyut03/"},
+    {name:"Instagram",icon:"I",url:"#"},
+    {name:"Dribbble", icon:"⬡", url:"#"},
+  ];
   return (
     <section id="contact" style={{padding:"120px 40px"}}>
       <div ref={ref} style={{maxWidth:"1000px",margin:"0 auto"}}>
@@ -609,10 +755,10 @@ function Contact() {
           <motion.div initial={{opacity:0,x:-30}} animate={inView?{opacity:1,x:0}:{}} transition={{duration:0.7}}>
             <p style={{color:"rgba(255,255,255,0.5)",fontSize:"14px",lineHeight:1.8,marginBottom:"48px"}}>I'm currently available for full-time roles and select freelance engagements. Whether you have a project in mind or just want to talk code — my inbox is always open.</p>
             <div style={{marginBottom:"48px",display:"flex",flexDirection:"column",gap:"16px"}}>
-              <a href="achyutk105@gmail.com" style={{display:"flex",alignItems:"center",gap:"12px",textDecoration:"none"}}>
+              <a href="mailto:achyutk105@gmail.com" style={{display:"flex",alignItems:"center",gap:"12px",textDecoration:"none"}}>
                 <span>✉</span><span style={{fontSize:"14px",color:"#00f5d4"}}>achyutk105@gmail.com</span>
               </a>
-              <a href="+91 9620533824" style={{display:"flex",alignItems:"center",gap:"12px",textDecoration:"none"}}>
+              <a href="tel:+919620533824" style={{display:"flex",alignItems:"center",gap:"12px",textDecoration:"none"}}>
                 <span>☎</span><span style={{fontSize:"14px",color:"rgba(255,255,255,0.4)"}}>+91 9620533824</span>
               </a>
             </div>
@@ -632,14 +778,14 @@ function Contact() {
                   <textarea placeholder="Tell me about your project..." value={form.message} rows={5} onChange={e=>setForm({...form,message:e.target.value})} onFocus={()=>setFocused("message")} onBlur={()=>setFocused(null)} style={iStyle("message")}/>
                   <MagneticBtn primary onClick={async () => {
                     if(form.name && form.email && form.message) {
-                        await fetch("https://formspree.io/f/xgonnvzl", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ name: form.name, email: form.email, message: form.message }),
-                          });
-                          setSent(true);
-                        }
-                      }}>Send Message →</MagneticBtn>
+                      await fetch("https://formspree.io/f/xgonnvzl", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ name: form.name, email: form.email, message: form.message }),
+                      });
+                      setSent(true);
+                    }
+                  }}>Send Message →</MagneticBtn>
                 </motion.div>
               ):(
                 <motion.div key="success" initial={{opacity:0,scale:0.9}} animate={{opacity:1,scale:1}}
@@ -661,7 +807,7 @@ function Contact() {
 function Footer() {
   return (
     <footer style={{borderTop:"1px solid rgba(255,255,255,0.05)",padding:"40px",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"16px"}}>
-      <span style={{fontSize:"12px",color:"rgba(255,255,255,0.2)",letterSpacing:"0.1em"}}>© 2024 Achyut Kulkrani. Built with React + Framer Motion.</span>
+      <span style={{fontSize:"12px",color:"rgba(255,255,255,0.2)",letterSpacing:"0.1em"}}>© 2025 Achyut Kulkarni. Built with React + Framer Motion.</span>
       <span style={{fontSize:"12px",color:"rgba(255,255,255,0.2)",letterSpacing:"0.1em"}}>Designed to impress. Engineered to perform.</span>
     </footer>
   );
@@ -686,6 +832,7 @@ function App() {
             <Projects/>
             <Skills/>
             <Experience/>
+            <Education/>
             <Contact/>
           </main>
           <Footer/>
