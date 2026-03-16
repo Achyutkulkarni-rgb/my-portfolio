@@ -453,7 +453,7 @@ function About() {
             <p style={{color:"rgba(255,255,255,0.55)",lineHeight:1.8,fontSize:"14px",marginBottom:"20px"}}>Results-driven Full Stack Developer with hands-on experience in designing, developing, and deploying scalable web applications. Proficient in building secure REST APIs and responsive front-end interfaces.</p>
             <p style={{color:"rgba(255,255,255,0.35)",lineHeight:1.8,fontSize:"14px",marginBottom:"32px"}}>Based in Hyderabad. Currently working at Amealio. Open to new opportunities and freelance projects. Specializing in Node.js backends, React frontends, and everything in between.</p>
             <MagneticBtn
-              href="/Achyut_CV.pdf"
+              href="https://drive.google.com/uc?export=download&id=1KPVDOXQJcuniakmd1mhdCI7rTVZFIpfa"
               primary
             >
               ⬇ Download Resume
